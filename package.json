@@ -1,0 +1,17 @@
+{
+  "name": "knowledge-os",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && node server.js",
+    "dev:frontend": "cd frontend && npx vite --port 5173",
+    "db:push": "cd backend && npx prisma db push",
+    "db:seed": "cd backend && node db/seed.js",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "setup": "npm run install:all && npx prisma generate --schema=backend/prisma/schema.prisma && npm run db:push"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

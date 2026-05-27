@@ -1,0 +1,112 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model NewsItem {
+  id             String   @id @default(uuid())
+  title          String
+  category       String
+  sourceName     String
+  sourceUrl      String
+  publishedAt    String
+  summary        String
+  whyItMatters   String
+  reliabilityNote String
+  fullAiOutput   String
+  saved          Boolean  @default(false)
+  createdAt      DateTime @default(now())
+}
+
+model KnowledgeItem {
+  id                  String   @id @default(uuid())
+  title               String
+  category            String
+  sourceType          String
+  sourceUrl           String   @default("")
+  originalText        String   @default("")
+  coreThesis          String   @default("")
+  oneThingToRemember  String   @default("")
+  keyPoints           String   @default("[]")
+  terms               String   @default("[]")
+  examples            String   @default("[]")
+  application         String   @default("")
+  mistakes            String   @default("")
+  selfTestQuestions   String   @default("[]")
+  flashcards          String   @default("[]")
+  fullAiOutput        String   @default("")
+  tags                String   @default("[]")
+  favorite            Boolean  @default(false)
+  reviewStatus        String   @default("none")
+  relatedTopics       String   @default("[]")
+  relatedItemIds      String   @default("[]")
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  reviewItems         ReviewItem[]
+}
+
+model ReviewItem {
+  id              String   @id @default(uuid())
+  knowledgeItemId String
+  knowledgeItem   KnowledgeItem @relation(fields: [knowledgeItemId], references: [id], onDelete: Cascade)
+  dueDate         DateTime
+  status          String   @default("pending")
+  difficulty      String   @default("")
+  completedAt     DateTime?
+}
+
+model Settings {
+  id                  String @id @default("default")
+  aiApiKey            String @default("")
+  aiBaseUrl           String @default("")
+  aiModel             String @default("gpt-4o-mini")
+  newsApiKey          String @default("")
+  preferredTopics     String @default("[\"Công nghệ\",\"AI\",\"Kinh tế\",\"Chính trị\"]")
+  preferredCategories String @default("[\"Economics\",\"Invest - Trading\",\"Marketing\",\"Health\",\"Mindset\"]")
+  dailyNewsCount      Int    @default(10)
+  includePolitics     Boolean @default(true)
+  autoFlashcards      Boolean @default(false)
+  defaultLanguage     String @default("vi")
+}
+
+model ReadingItem {
+  id         String   @id @default(uuid())
+  title      String
+  url        String
+  category   String
+  sourceType String   @default("article")
+  status     String   @default("unread")
+  note       String   @default("")
+  addedAt    DateTime @default(now())
+  startedAt  DateTime?
+  completedAt DateTime?
+}
+
+model ActionItem {
+  id                    String   @id @default(uuid())
+  title                 String
+  relatedKnowledgeItemId String   @default("")
+  category              String   @default("")
+  deadline              DateTime?
+  status                String   @default("pending")
+  resultNote            String   @default("")
+  lessonLearned         String   @default("")
+  createdAt             DateTime @default(now())
+  completedAt           DateTime?
+}
+
+model DailyReview {
+  id                    String   @id @default(uuid())
+  date                  DateTime
+  learnedToday          String   @default("")
+  mostImportantIdea     String   @default("")
+  actionsApplied        String   @default("")
+  unclearThings         String   @default("")
+  nextLearningSuggestion String  @default("")
+  createdAt             DateTime @default(now())
+}
