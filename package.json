@@ -11,6 +11,9 @@
     "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
     "setup": "npm run install:all && npx prisma generate --schema=backend/prisma/schema.prisma && npm run db:push"
   },
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "devDependencies": {
     "concurrently": "^8.2.2"
   }
